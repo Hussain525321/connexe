@@ -1,0 +1,303 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexe - WhatsApp API Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6B5B95, #D8BFD8);
+            font-family: 'Inter', sans-serif;
+        }
+        .bg-purple-gradient {
+            background: linear-gradient(135deg, #6B5B95, #D8BFD8);
+        }
+        .hover\:bg-purple-dark:hover {
+            background-color: #5A4A7F;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .sticky-footer {
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- Navigation -->
+    <nav class="bg-purple-gradient text-white p-4 sticky top-0 shadow-lg z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Replace the logo.png with the actual path to your uploaded logo file -->
+            <img src="logo.png" alt="Connexe Logo" class="h-12">
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="hover:text-gray-200 transition-colors duration-300">Home</a></li>
+                <li><a href="#about" class="hover:text-gray-200 transition-colors duration-300">About</a></li>
+                <li><a href="#solutions" class="hover:text-gray-200 transition-colors duration-300">Solutions</a></li>
+                <li><a href="#industries" class="hover:text-gray-200 transition-colors duration-300">Industries</a></li>
+                <li><a href="#pricing" class="hover:text-gray-200 transition-colors duration-300">Pricing</a></li>
+                <li><a href="#case-studies" class="hover:text-gray-200 transition-colors duration-300">Case Studies</a></li>
+                <li><a href="#blog" class="hover:text-gray-200 transition-colors duration-300">Blog</a></li>
+                <li><a href="#contact" class="hover:text-gray-200 transition-colors duration-300">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="bg-purple-gradient text-white py-24 fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-5xl font-bold mb-6 leading-tight">Power Your Business with WhatsApp API Solutions</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">Connexe helps brands and businesses connect, communicate, and convert through the power of WhatsApp. From lead generation to dealer engagement — we automate, optimize, and personalize every message.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#contact" class="bg-white text-purple-800 px-8 py-4 rounded-full font-semibold hover:bg-gray-200 hover-scale">Get a Free Demo</a>
+                <a href="#contact" class="bg-white text-purple-800 px-8 py-4 rounded-full font-semibold hover:bg-gray-200 hover-scale">Talk to an Expert</a>
+                <a href="#contact" class="bg-white text-purple-800 px-8 py-4 rounded-full font-semibold hover:bg-gray-200 hover-scale">Try WhatsApp API</a>
+            </div>
+            <p class="mt-8 text-sm italic">Visual suggestion: Image or animation of WhatsApp conversations automating order confirmations, support chats, and promotional offers.</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">The WhatsApp API Experts for Growth-Focused Businesses</h2>
+            <p class="text-lg max-w-3xl mx-auto mb-6">Connexe is a WhatsApp-first IT solutions company that helps organizations leverage the WhatsApp Business API for automation, customer engagement, marketing, and more. Whether you need to reach customers, manage dealer networks, or simplify support — Connexe is your connector.</p>
+            <p class="text-lg mb-6"><strong>Our Vision:</strong> To build connected ecosystems where businesses and people engage meaningfully using WhatsApp.</p>
+            <h3 class="text-2xl font-semibold mt-8 mb-4 text-purple-800">What Sets Us Apart:</h3>
+            <ul class="text-lg max-w-3xl mx-auto list-disc list-inside space-y-2">
+                <li>Deep API expertise</li>
+                <li>Business-first automation flows</li>
+                <li>Marketing + IT strategy in one place</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="bg-gray-100 py-20 fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">Our Solutions</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">WhatsApp Campaign Management</h3>
+                    <p>Design and launch broadcast campaigns with dynamic content, buttons, and opt-in tracking.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Lead Capture & Nurturing Bots</h3>
+                    <p>Turn your WhatsApp into a 24/7 lead machine — integrated with your CRM.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">WhatsApp Storefront & Catalogs</h3>
+                    <p>Showcase products, take orders, and automate confirmations — all within chat.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Dealer/Distributor Communication Systems</h3>
+                    <p>Send circulars, updates, and offers to your network with full analytics and delivery reports.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Automated Alerts & Reminders</h3>
+                    <p>From appointment confirmations to payment reminders — set once, run forever.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">API Integration with Your Tools</h3>
+                    <p>Plug into your existing tech stack — ERPs, CRMs, websites, or mobile apps.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section id="industries" class="py-20 bg-white fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">Industries We Serve</h2>
+            <p class="text-lg mb-6">Specialized WhatsApp API solutions for:</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <p class="bg-purple-100 p-6 rounded-lg hover-scale">FMCG & Distribution</p>
+                <p class="bg-purple-100 p-6 rounded-lg hover-scale">Automotive Dealerships</p>
+                <p class="bg-purple-100 p-6 rounded-lg hover-scale">EdTech & Coaching</p>
+                <p class="bg-purple-100 p-6 rounded-lg hover-scale">Healthcare & Clinics</p>
+                <p class="bg-purple-100 p-6 rounded-lg hover-scale">Real Estate</p>
+                <p class="bg-purple-100 p-6 rounded-lg hover-scale">NGOs & Campaigns</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="bg-gray-100 py-20 fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">Pricing Plans</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Basic</h3>
+                    <p class="text-3xl font-bold mb-3">₹1,999/Month</p>
+                    <p>Shared inbox, broadcasts</p>
+                    <p class="text-sm text-gray-600 mt-2">Minimal Custom Dev Effort</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Growth</h3>
+                    <p class="text-3xl font-bold mb-3">₹3,499/Month</p>
+                    <p>+ Analytics, basic chatbot, response msgs</p>
+                    <p class="text-sm text-gray-600 mt-2">Low Custom Dev Effort</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Scale</h3>
+                    <p class="text-3xl font-bold mb-3">₹5,999/Month</p>
+                    <p>+ Advanced chatbot, drip campaigns</p>
+                    <p class="text-sm text-gray-600 mt-2">Moderate Custom Dev Effort (flow customization)</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Pro</h3>
+                    <p class="text-3xl font-bold mb-3">₹9,999/Month</p>
+                    <p>+ APIs, priority support</p>
+                    <p class="text-sm text-gray-600 mt-2">High Custom Dev Effort (custom integrations)</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Business</h3>
+                    <p class="text-3xl font-bold mb-3">₹14,999/Month</p>
+                    <p>WhatsApp commerce</p>
+                    <p class="text-sm text-gray-600 mt-2">Very High Custom Dev Effort (full workflows)</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Enterprise</h3>
+                    <p class="text-3xl font-bold mb-3">Custom (₹25,000+)</p>
+                    <p>Fully custom solutions, dedicated support</p>
+                    <p class="text-sm text-gray-600 mt-2">Extensive Custom Dev Effort</p>
+                </div>
+            </div>
+            <p class="mt-8 text-sm"><strong>WhatsApp Fees:</strong> Charged to client’s Meta account (no Connexe markup to remain competitive).</p>
+            <p class="text-sm"><strong>Billing:</strong> Monthly subscription credited to Connexe’s bank account via credit card.</p>
+            <p class="text-sm"><strong>Onboarding Fees:</strong> If Connexe Provides SIM: ₹2,000 one-time fee (covers SIM procurement, WhatsApp Business API setup, and initial configuration). If Client Provides SIM: ₹1,500 one-time fee (covers API setup and basic onboarding). If six-month package taken, above charges will be waived off.</p>
+            <p class="text-sm italic mt-2">This pricing can be changed (price increased) after a year or so.</p>
+        </div>
+    </section>
+
+    <!-- Case Studies Section -->
+    <section id="case-studies" class="py-20 bg-white fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">Case Studies / Results</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-purple-100 p-8 rounded-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Dealer Engagement for a Manufacturing Company</h3>
+                    <p>Increased dealer participation in schemes by 4x using scheduled WhatsApp alerts and real-time offer tracking.</p>
+                </div>
+                <div class="bg-purple-100 p-8 rounded-lg hover-scale">
+                    <h3 class="text-2xl font-semibold mb-3 text-purple-800">Lead Conversion Boost for an EdTech</h3>
+                    <p>Automated inquiry responses and reminders led to 3x higher demo bookings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="bg-gray-100 py-20 fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">Resources / Blog</h2>
+            <ul class="text-lg max-w-3xl mx-auto list-disc list-inside space-y-2">
+                <li>How WhatsApp API Can Replace Email Marketing</li>
+                <li>Setting Up an Automated WhatsApp Lead Bot in 30 Minutes</li>
+                <li>Best Practices for Building Customer Journeys in WhatsApp</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white fade-in">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8 text-purple-800">Start a WhatsApp-first Strategy Today</h2>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#contact" class="bg-purple-800 text-white px-8 py-4 rounded-full font-semibold hover:bg-purple-dark hover-scale">Request API Setup</a>
+                <a href="#contact" class="bg-purple-800 text-white px-8 py-4 rounded-full font-semibold hover:bg-purple-dark hover-scale">Chat With Us on WhatsApp</a>
+                <a href="#contact" class="bg-purple-800 text-white px-8 py-4 rounded-full font-semibold hover:bg-purple-dark hover-scale">Book a Strategy Call</a>
+            </div>
+            <form class="max-w-lg mx-auto space-y-6" action="mailto:info@connexe.com" method="post" enctype="text/plain">
+                <input type="text" name="name" placeholder="Your Name" class="w-full p-4 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-800" required>
+                <input type="email" name="email" placeholder="Your Email" class="w-full p-4 rounded-lg border focus:outline-none focus:ring-2 focus:ring-purple-800" required>
+                <textarea name="message" placeholder="Your Message" class="w-full p-4 rounded-lg border h-40 focus:outline-none focus:ring-2 focus:ring-purple-800" required></textarea>
+                <button type="submit" class="bg-purple-800 text-white px-8 py-4 rounded-full font-semibold hover:bg-purple-dark hover-scale">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-purple-gradient text-white p-6 sticky-footer">
+        <div class="container mx-auto text-center">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h4 class="font-semibold text-lg mb-2">About Connexe</h4>
+                    <p class="text-sm">Connexe – Your WhatsApp API Growth Partner.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-2">WhatsApp API Services</h4>
+                    <p class="text-sm">Solutions for automation, engagement, and more.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-2">Blog</h4>
+                    <p class="text-sm">Insights on WhatsApp strategies.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-2">Contact</h4>
+                    <p class="text-sm">Reach out to start your journey.</p>
+                </div>
+            </div>
+            <p class="text-sm mb-2"><a href="#privacy" class="underline hover:text-gray-200">Privacy Policy</a> | <a href="#terms" class="underline hover:text-gray-200">Terms</a></p>
+            <p class="text-sm mb-2">
+                <a href="#whatsapp" class="underline hover:text-gray-200">WhatsApp</a> | 
+                <a href="#linkedin" class="underline hover:text-gray-200">LinkedIn</a> | 
+                <a href="mailto:info@connexe.com" class="underline hover:text-gray-200">Email</a>
+            </p>
+            <p class="text-sm">© 2025 Connexe. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
